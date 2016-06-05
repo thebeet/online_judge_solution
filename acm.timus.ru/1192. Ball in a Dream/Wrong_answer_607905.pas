@@ -1,0 +1,11 @@
+const
+ g=10;
+ pi=3.14159265;
+var
+ V,A,b,m,ans:extended;
+begin
+ readln(v,a,m);
+ b:=2*sin(a/180*pi)*cos(a/180*pi)/g;
+ ans:=b*v*v/(1-1/m);
+ writeln(ans:0:2);
+end.
