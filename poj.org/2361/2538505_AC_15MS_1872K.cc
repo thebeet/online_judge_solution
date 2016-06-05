@@ -1,0 +1,150 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+char isend[262144];
+int queue[262144];
+bool who[262144];
+
+bool issame(int st, int a, int b, int c)
+{
+	int sa = (st & (3 << (a << 1))) >> (a << 1);
+	int sb = (st & (3 << (b << 1))) >> (b << 1);
+	int sc = (st & (3 << (c << 1))) >> (c << 1);
+	if ((sa == sb) && (sa == sc) && (sa != 0))
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool checkisend(int st)
+{
+	int i, n;
+	n = st;
+	for (i = 0; i < 9; ++i)
+	{
+		if ((n & 3) == 0)
+		{
+			break;
+		}
+		n >>= 2;
+	}
+	if (i == 9)
+	{
+		return true;
+	}
+	return (issame(st, 0, 1, 2) || issame(st, 3, 4, 5) || issame(st, 6, 7, 8) ||
+			issame(st, 0, 3, 6) || issame(st, 1, 4, 7) || issame(st, 2, 5, 8) ||
+			issame(st, 2, 4, 6) || issame(st, 0, 4, 8));
+}
+
+void out(int st)
+{
+	int m = st;
+	cout << m << " ";
+	for (int j = 0; j < 9; ++j)
+	{
+		if ((m & 3) == 0)
+		{
+			cout << '.';
+		}
+		if ((m & 3) == 2)
+		{
+			cout << 'X';
+		}
+		if ((m & 3) == 1)
+		{
+			cout << 'O';
+		}
+		if ((m & 3) == 3)
+		{
+			cout << "!!!!!!!!!!!!";
+		}
+		m >>= 2;
+	}
+	cout << endl;
+}
+
+int main()
+{
+	int i, j;
+	//out(131654);
+	//checkisend(131654);
+	//freopen("out", "w", stdout);
+	memset(isend, 0, sizeof(isend));
+	memset(queue, 0, sizeof(queue));
+	memset(who, false, sizeof(who));
+	queue[0] = 1;
+	who[1] = true;
+	queue[1] = 0;
+	isend[0] = 1;
+	for (i = 1; i <= queue[0]; ++i)
+	{
+		//out (queue[i]);
+		int cv = 1;
+		if (who[i])
+		{
+			cv <<= 1;
+		}
+		for (j = 0; j < 9; ++j)
+		{
+			if ((queue[i] & (3 << (j << 1))) == 0)
+			{
+				if (isend[queue[i] | (cv << (j << 1))] == 0)
+				{
+					queue[++queue[0]] = queue[i] | (cv << (j << 1));
+					who[queue[0]] = !who[i];
+					if (checkisend(queue[queue[0]]) == true)
+					{
+						//out(queue[queue[0]]);
+						isend[queue[queue[0]]] = 2;
+						--queue[0];
+					}
+					else
+					{
+						isend[queue[queue[0]]] = 1;
+					}
+				}
+			}
+		}
+	}
+	
+	string inp, inp1;
+	int ti, tn;
+	cin >> tn;
+	for (ti = 1; ti <= tn; ++ti)
+	{
+		inp = "";
+		for (i = 1; i <= 3; ++i)
+		{
+			cin >> inp1;
+			inp += inp1;
+		}
+		int st = 0;
+		for (i = 0; i < 9; ++i)
+		{
+			if (inp[i] == 'X')
+			{
+				st |= (2 << (i << 1));
+			}
+			else if (inp[i] == 'O')
+			{
+				st |= (1 << (i << 1));
+			}
+		}
+		if (isend[st] >= 1)
+		{
+			cout << "yes" << endl;
+		}
+		else
+		{
+			cout << "no" << endl;
+		}
+	}
+	return 0;
+}

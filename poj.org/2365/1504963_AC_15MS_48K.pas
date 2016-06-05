@@ -1,0 +1,20 @@
+const
+ pi=3.14159265;
+var
+ n,i:longint;
+ r,s,x1,y1,xt,yt,xt1,yt1:real;
+begin
+ read(n,r);
+ read(x1,y1);
+ xt1:=x1;yt1:=y1;
+ s:=0;
+ for i:=2 to n do
+  begin
+   read(xt,yt);
+   s:=s+sqrt((xt-xt1)*(xt-xt1)+(yt-yt1)*(yt-yt1));
+   xt1:=xt;yt1:=yt;
+  end;
+ s:=s+sqrt((x1-xt1)*(x1-xt1)+(y1-yt1)*(y1-yt1));
+ s:=s+r*2*pi;
+ writeln(s:0:2);
+end.
