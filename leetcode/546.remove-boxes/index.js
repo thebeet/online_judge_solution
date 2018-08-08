@@ -49,25 +49,13 @@ var removeBoxes = function(boxes) {
                                     lenRight += 1;
                                     sumRight += calc(j + 1, preRight);
                                     preRight = j - 1;
-
                                     dp[start][end] = Math.max(dp[start][end], sumLeft + sumRight + calc(i + 1, j - 1) + (lenLeft + lenRight) * (lenLeft + lenRight));
                                 }
 
                             }
                         }
                     }
-                    let nStart = start + 1;
-                    let nEnd = end - 1;
-                    while (boxes[nStart] === boxes[start]) {
-                        nStart += 1;
-                    }
-                    while (boxes[nEnd] === boxes[start]) {
-                        nEnd -= 1;
-                    }
-                    let len = (end - nEnd) + (nStart - start); 
-                    dp[start][end] = Math.max(dp[start][end], calc(nStart, nEnd) + len * len);
                 }
-                
                 for (let i = start + 1; i <= end; i++) {
                     if (boxes[i] !== boxes[i - 1]) {
                         dp[start][end] = Math.max(dp[start][end], calc(start, i - 1) + calc(i, end));

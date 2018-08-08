@@ -237,3 +237,75 @@ class Treap {
     }
 }
 
+/**
+ * @param {number[][]} rectangles
+ * @return {boolean}
+ */
+var isRectangleCover = function(rectangles) {
+    let divRects = [];
+    for (let rect of rectangles) {
+        divRects.push({
+            x: rect[0],
+            start: rect[1],
+            end: rect[3],
+            type: 'add'
+        });
+        divRects.push({
+            x: rect[2],
+            start: rect[1],
+            end: rect[3],
+            type: 'remove'
+        });
+    }
+    divRects.sort((r1, r2) => {
+        if (r1.x < r2.x) return -1;
+        if (r1.x > r2.x) return 1;
+        if (r1.type === r2.type) return 0;
+        if (r1.type === 'remove') return -1;
+        return 1;
+    });
+
+    let tree = new Treap((node1, node2) => {
+        if (node1.start < node2.start) return -1;
+        if (node1.start > node2.start) return 1;
+        return 0;
+    });
+    for (let divRect of divRects) {
+        if (divRect.type === 'add') {
+            let nearNodeFromLeft = tree.searchNearestNodeFromLeft({start: divRect.end - 0.1});
+            if (nearNodeFromLeft && (nearNodeFromLeft.value.end > divRect.start)) {
+                return false;
+            }
+            tree.insert({
+                start: divRect.start,
+                end: divRect.end
+            });
+        } else {
+            let node = tree.search({start: divRect.start});
+            if (node === null) {
+                console.log('impossible');
+            }
+            tree.remove(node);
+        }
+    }
+
+    let isOverLap = function (rect1, rect2) {
+        return !((rect1[3] <= rect2[1]) || (rect2[3] <= rect1[1]) || (rect1[2] <= rect2[0]) || (rect2[2] <= rect1[0]));
+    };
+    let N = rectangles.length;
+    let minX = rectangles[0][0];
+    let minY = rectangles[0][1];
+    let maxX = rectangles[0][2];
+    let maxY = rectangles[0][3];
+    let area = 0;
+    for (let i = 0; i < N; ++i) {
+        let rect = rectangles[i];
+        minX = Math.min(minX, rect[0]);
+        minY = Math.min(minY, rect[1]);
+        maxX = Math.max(maxX, rect[2]);
+        maxY = Math.max(maxY, rect[3]);
+        area += (rect[2] - rect[0]) * (rect[3] - rect[1]);
+    }
+    return ((maxX - minX) * (maxY - minY) === area);
+};
+
