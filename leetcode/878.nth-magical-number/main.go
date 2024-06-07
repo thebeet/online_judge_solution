@@ -17,7 +17,7 @@ func nthMagicalNumber(n int, a int, b int) int {
 			p2 += b
 		}
 	}
-	return int(int64(nums[n%len(nums)]) + int64(p1)*int64(n/len(nums))%1000000007)
+	return int((int64(nums[n%len(nums)]) + int64(p1)*int64(n/len(nums))) % 1000000007)
 }
 
 func main() {
